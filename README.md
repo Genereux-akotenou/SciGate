@@ -18,11 +18,9 @@ SciGate is a user-friendly graphical interface designed to simplify access to hi
   ├── package.json
   └── vite.config.ts
 ```
+#### Source
+We use as start bleuprint this template https://electron-vite.github.io/
 
 #### Contribution
 - Open a pull request with a description of the changes.
 - Ensure your code follows the project's coding standards.
-- Include relevant tests and ensure all existing tests pass.
-
-#### Source
-We i-use as start bleuprint this template https://electron-vite.github.io/

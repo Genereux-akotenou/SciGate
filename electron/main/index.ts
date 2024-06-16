@@ -38,6 +38,8 @@ async function createWindow() {
     webPreferences: {
       preload,
     },
+    width: 1200,
+    height: 800
   })
 
   if (VITE_DEV_SERVER_URL) { // #298
@@ -93,6 +95,8 @@ ipcMain.handle('open-win', (_, arg) => {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    width: 1200,
+    height: 800
   })
 
   if (VITE_DEV_SERVER_URL) {
