@@ -1,2 +1,5 @@
 node_modules
 .DS_Store
+dist-electron/main/index.js
+dist-electron/main/index.js.map
+dist-electron/preload/index.mjs
