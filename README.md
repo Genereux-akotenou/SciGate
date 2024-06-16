@@ -1,6 +1,8 @@
 ### SciGate
 SciGate is a user-friendly graphical interface designed to simplify access to high-performance computing (HPC) resources. By seamlessly integrating SSH connections, SciGate allows researchers to manage files, execute commands, and interact with HPC servers without needing extensive terminal experience.
 
+<img src="./app.png" style="width: 95%;" />
+
 #### Setup
 - `npm i`
 - `npm run dev`
