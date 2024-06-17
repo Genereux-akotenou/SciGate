@@ -30,6 +30,7 @@ if (!app.requestSingleInstanceLock()) {
 // -----------------------------------------------------------------
 const AppStorage = require('../../service/AppStorage.cjs');
 const SSHManager = require('../../service/SSHManager.cjs');
+let sshManager = new SSHManager();
 
 // -----------------------------------------------------------------
 // App Render
@@ -128,10 +129,36 @@ ipcMain.handle('fetch-server', async (event, server) => {
     return { success: false, error: error.message };
   }
 });
-ipcMain.handle('get-ssh-manager', async (event, server) => {
+// ipcMain.handle('get-ssh-manager', async (event, server) => {
+//   try {
+//     const sshManager = new SSHManager();
+//     return { success: true, obj: sshManager };
+//   } catch (error) {
+//     return { success: false, error: error.message };
+//   }
+// });
+ipcMain.handle('ssh-connect', async (event, config) => {
   try {
-    const sshManager = new SSHManager();
-    return { success: true, sshManager };
+    await sshManager.connect(config);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('ssh-disconnect', async () => {
+  try {
+    sshManager.disconnect();
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('ssh-execute-command', async (event, command) => {
+  try {
+    const result = await sshManager.executeCommand(command);
+    return { success: true, result };
   } catch (error) {
     return { success: false, error: error.message };
   }

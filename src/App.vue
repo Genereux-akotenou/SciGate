@@ -1,24 +1,7 @@
 <template>
-  <!--<div>
-    <a href="https://www.electronjs.org/" target="_blank">
-      <img src="./assets/electron.svg" class="logo electron" alt="Electron logo" />
-    </a>
-    <a href="https://vitejs.dev/" target="_blank">
-      <img src="./assets/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>-->
-  <!--<HelloWorld msg="SciGate" />-->
-  <Login/>
+  <router-view></router-view>
 </template>
-
-<script setup lang="ts">
-  //import HelloWorld from './components/HelloWorld.vue'
-  import Login from './components/Login.vue'
-</script>
-
+<script setup lang="ts"></script>
 <style>
   div:where(.swal2-container) h2:where(.swal2-title) {
     font-size: 1.6em;

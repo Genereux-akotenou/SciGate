@@ -26,9 +26,12 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 // Expose other APTs
 // -----------------------------------------------------------------
 contextBridge.exposeInMainWorld('electron', {
-  addServer: (server) => ipcRenderer.invoke('add-server', server),
-  fetchServer: ()     => ipcRenderer.invoke('fetch-server'),
-  initSSHManager: ()  => ipcRenderer.invoke('get-ssh-manager')
+  addServer: (server)           => ipcRenderer.invoke('add-server', server),
+  fetchServer: ()               => ipcRenderer.invoke('fetch-server'),
+  // initSSHManager: ()  => ipcRenderer.invoke('get-ssh-manager')
+  sshConnect: (config)          => ipcRenderer.invoke('ssh-connect', config),
+  sshDisconnect: ()             => ipcRenderer.invoke('ssh-disconnect'),
+  sshExecuteCommand: (command)  => ipcRenderer.invoke('ssh-execute-command', command),
 });
 
 // -----------------------------------------------------------------

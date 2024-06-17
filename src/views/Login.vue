@@ -15,7 +15,7 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" v-model="password" :disabled="!selectedServer" required>
                 <br>
-                <button type="submit" :disabled="!selectedServer">Login</button>
+                <button id="login" type="submit" :disabled="!selectedServer">{{ !vpnConnected ? 'Login' : 'Connect now (after VPN)' }}</button>
             </form>
         </div>
         <br>
@@ -34,7 +34,9 @@ export default {
             username: '',
             password: '',
             selectedServer: null,
-            servers: []
+            servers: [],
+            vpnConnected: false,
+            click: 0
         };
     },
     created() {
@@ -121,7 +123,7 @@ export default {
             }
             // Check if the selected server requires VPN
             const selectedServer = this.servers.find(server => server.id === this.selectedServer);
-            if (selectedServer && selectedServer.requiresVpn && selectedServer.vpnLink) {
+            if (selectedServer && selectedServer.requiresVpn && selectedServer.vpnLink && !this.vpnConnected) {
                 Swal.fire({
                     title: 'Connecting via VPN',
                     text: 'This server require VPN connexion. Redirecting to VPN link...',
@@ -132,46 +134,36 @@ export default {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.open(selectedServer.vpnLink, '_blank');
-                    } else {
+                        this.vpnConnected = true;
+                    } 
+                    else {
                         Swal.fire('Cancelled', 'VPN connection cancelled', 'info');
                     }
                 });
-            } 
+            }
+            this.click = this.click + 1;
 
-            // SSH connection configuration
-            const sshConfig = {
-                host: selectedServer.hostname,
-                port: selectedServer.port,
-                username: this.username,
-                password: this.password
-            };
-            try {
-                const response = await window.electron.initSSHManager();
-                if (!response.success) {
-                    Swal.fire('Error', response.error, 'error');
+            if((!this.vpnConnected && !selectedServer.requiresVpn) || (this.click>1 && selectedServer.requiresVpn)) {
+                const sshConfig = {
+                    host: selectedServer.hostname,
+                    port: selectedServer.port,
+                    username: this.username,
+                    password: this.password
+                };
+                try {
+                    const sshConnectResponse = await window.electron.sshConnect(sshConfig);
+                    if (sshConnectResponse.success) {
+                        console.log('Connected to SSH server');
+                        localStorage.setItem('site', selectedServer.serverName);
+                        this.$router.push('/dashboard');
+                    } 
+                    else {
+                        Swal.fire('Error', sshConnectResponse.error, 'error');
+                    }
+                } 
+                catch (error) {
+                    console.error('Error:', error);
                 }
-
-                const sshManager = response.sshManager;
-                await sshManager.connect(sshConfig);
-                console.log('Connected to SSH server');
-
-                // Execute command
-                const command = 'ls -l';
-                const result = await sshManager.executeCommand(command);
-                console.log('Command output:', result);
-
-                // Disconnect from SSH server
-                sshManager.disconnect();
-                console.log('Disconnected from SSH server');
-
-                // Route to dashboard or perform other actions upon successful login
-                //this.routeToDashboardWithSSH(sshManager);
-                console.log(`User: ${this.username}, Password: ${this.password}`);
-                alert('Login successful!');
-            } 
-            catch (error) {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Failed to connect via SSH. Please check your credentials and try again.', 'error');
             }
         },
     }
@@ -200,7 +192,7 @@ export default {
         text-align: left;
     }
     input{
-        max-width: 25em;
+        max-width: 28em;
     }
     .login-container {
         max-width: 400px;
