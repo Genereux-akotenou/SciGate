@@ -27,6 +27,7 @@
   
 <script>
 import Swal from 'sweetalert2';
+import { mapActions } from 'vuex';
 
 export default {
     data() {
@@ -43,6 +44,7 @@ export default {
         this.fetchServers();
     },
     methods: {
+        ...mapActions(['saveSshManagerId']),
         async addServer() {
             const { value: formValues, isConfirmed } = await Swal.fire({
                 title: 'Setup Server',
@@ -154,6 +156,7 @@ export default {
                     const sshConnectResponse = await window.electron.sshConnect(sshConfig);
                     if (sshConnectResponse.success) {
                         console.log('Connected to SSH server');
+                        console.log(sshConnectResponse)
                         localStorage.setItem('site', selectedServer.serverName);
                         this.$router.push('/dashboard');
                     } 

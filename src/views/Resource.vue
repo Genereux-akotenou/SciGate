@@ -33,7 +33,7 @@
         </div>
       </nav>
       <div class="content">
-        <p>Welcome to the dashboard!</p>
+        <p>Resources</p>
       </div>
       <div class="side-band">
         <button  @click="navigateTo('shell')" class="open-shell-button">
@@ -74,5 +74,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

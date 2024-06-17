@@ -32,8 +32,13 @@
           {{ formattedTime }}
         </div>
       </nav>
-      <div class="content">
-        <p>Welcome to the dashboard!</p>
+      <div class="content" style="max-width: 100%;">
+        <vShell style="height: ;"
+          :banner="banner"
+          :shell_input="send_to_terminal"
+          :commands="commands"
+          @shell_output="prompt"
+        ></vShell>
       </div>
       <div class="side-band">
         <button  @click="navigateTo('shell')" class="open-shell-button">
@@ -46,9 +51,13 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
+import vShell from '../components/v-shell.vue'
 
 export default {
   name: 'Dashboard',
+  components: {
+    vShell
+  },
   computed: {
     ...mapState(['site', 'currentMenu', 'elapsedTime']),
     ...mapGetters(['formattedTime']),
@@ -69,10 +78,51 @@ export default {
       this.setCurrentMenu(section);
       this.$router.push(`/${section}`);
     },
+    prompt(value) {
+      if (value == "node -v") {
+        this.send_to_terminal = process.versions.node;
+      }
+    }
   },
+  data() {
+    return {
+      send_to_terminal: "",
+      banner: {
+        // header: "Vue Shell",
+        // subHeader: "Shell is power just enjoy 🔥",
+        // helpHeader: 'Enter "help" for more information.',
+        emoji: {
+            // first: "🔅",
+            // second: "🔆",
+            time: 750
+        },
+        // sign: "VueShell $",
+        // img: {
+        //     align: "left",
+        //     link: "../assets/chip.png",
+        //     width: 100,
+        //     height: 100
+        // }
+      },
+      commands: [
+        { name: "info",
+          desc: "Show information about this terminal",
+          get() {
+            return `<p>With ❤️ By Salah Bentayeb @halasproject.</p>`;
+        }
+        },
+        {
+          name: "uname",
+          desc: "Show the current terminal name",
+          get() {
+            return navigator.appVersion;
+          }
+        }
+      ]
+    };
+  }
 };
 </script>
 
 <style scoped>
-
 </style>

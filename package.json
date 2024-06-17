@@ -34,6 +34,7 @@
     "ssh2": "^1.15.0",
     "sweetalert2": "^11.11.1",
     "vue-router": "^4.0.13",
-    "vue-sqlite": "^0.0.0"
+    "vue-sqlite": "^0.0.0",
+    "vuex": "^4.1.0"
   }
 }

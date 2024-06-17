@@ -33,10 +33,10 @@
         </div>
       </nav>
       <div class="content">
-        <p>Welcome to the dashboard!</p>
+        <p>Task</p>
       </div>
       <div class="side-band">
-        <button  @click="navigateTo('shell')" class="open-shell-button">
+        <button @click="navigateTo('shell')" class="open-shell-button">
           <img style="width: 1.5em;" src="../assets/terminal.png" />
         </button>
       </div>
@@ -74,5 +74,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
