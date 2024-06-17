@@ -1,6 +1,8 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
-// --------- Expose some API to the Renderer process ---------
+// -----------------------------------------------------------------
+// Expose some API to the Renderer process
+// -----------------------------------------------------------------
 contextBridge.exposeInMainWorld('ipcRenderer', {
   on(...args: Parameters<typeof ipcRenderer.on>) {
     const [channel, listener] = args
@@ -18,12 +20,20 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     const [channel, ...omit] = args
     return ipcRenderer.invoke(channel, ...omit)
   },
-
-  // You can expose other APTs you need here.
-  // ...
 })
 
-// --------- Preload scripts loading ---------
+// -----------------------------------------------------------------
+// Expose other APTs
+// -----------------------------------------------------------------
+contextBridge.exposeInMainWorld('electron', {
+  addServer: (server) => ipcRenderer.invoke('add-server', server),
+  fetchServer: ()     => ipcRenderer.invoke('fetch-server'),
+  initSSHManager: ()  => ipcRenderer.invoke('get-ssh-manager')
+});
+
+// -----------------------------------------------------------------
+// Preload scripts loading
+// -----------------------------------------------------------------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
@@ -37,7 +47,6 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
     }
   })
 }
-
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
     if (!Array.from(parent.children).find(e => e === child)) {
@@ -88,12 +97,10 @@ function useLoading() {
     `
   const oStyle = document.createElement('style')
   const oDiv = document.createElement('div')
-
   oStyle.id = 'app-loading-style'
   oStyle.innerHTML = styleContent
   oDiv.className = 'app-loading-wrap'
   oDiv.innerHTML = `<div class="${className}"><div></div></div>`
-
   return {
     appendLoading() {
       safeDOM.append(document.head, oStyle)
@@ -107,12 +114,9 @@ function useLoading() {
 }
 
 // ----------------------------------------------------------------------
-
 const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
-
 window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
-
 setTimeout(removeLoading, 4999)

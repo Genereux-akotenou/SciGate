@@ -20,6 +20,23 @@
 </script>
 
 <style>
+  div:where(.swal2-container) h2:where(.swal2-title) {
+    font-size: 1.6em;
+  }
+  .swal2-popup{
+    font-size: 0.9em !important;
+  }
+  div:where(.swal2-container) input:where(.swal2-input){
+    border: 1px solid #b6b6b6 !important;
+  }
+  .g-pop{
+    display: flex;
+    flex-direction: column;
+  }
+  .g-pop input{
+    margin: 0.5em 0;
+    height: 2.15em;
+  }
   body {
     /*background: url('./assets/curved-calme1.jpg') no-repeat center center fixed;*/
     position: relative;
